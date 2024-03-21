@@ -33,20 +33,29 @@ function useProvideCat() {
 
       const next = dataImages.length >= 10;
 
-      setImageCache({ [breed]: { images, next } });
+      setImageCache((value) => ({
+        ...value,
+        [breed]: {
+          images,
+          next,
+        },
+      }));
 
       return false;
     }
 
-    const currentLength = target.images.entries.length;
+    const currentLength = target.images.size;
 
     dataImages.forEach((item) => {
       target.images.set(item.id, item);
     });
 
-    const next = currentLength !== dataImages.entries.length;
+    const next = currentLength !== target.images.size;
 
-    setImageCache({ [breed]: { images: target.images, next } });
+    setImageCache((value) => ({
+      ...value,
+      [breed]: { images: target.images, next },
+    }));
   };
 
   const getImages = (breed: string) => {
