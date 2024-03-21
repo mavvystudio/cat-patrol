@@ -4,35 +4,49 @@ import { createFetch } from '../utils';
 
 type QueryOptions = {
   params?: string;
-  paused: boolean;
+  paused?: boolean;
+  callback?: (responseData: any) => void;
 };
 
 export default function useQuery(endpoint: string, options?: QueryOptions) {
   const queryUrl = options?.params ? `${endpoint}?${options.params}` : endpoint;
   const cat = useCat();
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState<boolean | null>(null);
 
   const query = useCallback(
     async (refetchParam?: string) => {
-      const cacheData = cat?.queryCache[queryUrl];
-
-      if (cacheData || loading) {
-        return null;
+      const fetchUrl = refetchParam ? `${endpoint}?${refetchParam}` : queryUrl;
+      const cacheData = cat?.queryCache[fetchUrl];
+      console.log({ cacheData, fetchUrl });
+      if (cacheData) {
+        setData(cacheData);
+        if (options?.callback) {
+          options.callback(cacheData);
+        }
+        return cacheData;
       }
 
       setLoading(true);
 
-      const fetchUrl = refetchParam ? `${endpoint}?${refetchParam}` : queryUrl;
       const res = await createFetch(fetchUrl);
 
       setLoading(false);
+
+      setData(() => res);
 
       cat?.setQueryCache((value: any) => ({
         ...value,
         [fetchUrl]: res,
       }));
+
+      if (options?.callback) {
+        options.callback(res);
+      }
+
+      return res;
     },
-    [endpoint, cat, loading, queryUrl],
+    [endpoint, cat, queryUrl, options],
   );
 
   useEffect(() => {
@@ -43,8 +57,7 @@ export default function useQuery(endpoint: string, options?: QueryOptions) {
 
   return {
     loading,
-    data: cat?.queryCache[queryUrl],
-    cache: cat?.queryCache,
+    data,
     refetch: query,
   };
 }
