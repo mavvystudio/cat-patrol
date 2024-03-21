@@ -6,6 +6,7 @@ import LinearProgress from '@mavvy/m3-ui/LinearProgress';
 
 import { useCat } from '../components/CatProvider';
 import useQuery from '../hooks/use-query';
+import CatItem from 'components/CatItem';
 
 const endpoint = '/images/search';
 const createParams = (page: number, breed?: string) =>
@@ -53,12 +54,27 @@ const Search = () => {
   }
 
   return (
-    <div>
-      {loading && <LinearProgress color="primary" indeterminate />}
-      {catImages.images.map((item) => {
-        return <p key={item.id}>{item.id}</p>;
-      })}
-      {catImages.next && <Button onClick={handleClick}>Load more</Button>}
+    <div className="flex flex-col items-center mb-10">
+      {loading && (
+        <div className="sticky top-[96px] w-full">
+          <LinearProgress color="primary" indeterminate />
+        </div>
+      )}
+      <div className="grid grid-cols-4 container gap-2.5 my-4">
+        {catImages.images.map((item) => {
+          return <CatItem key={item.id} item={item} />;
+        })}
+      </div>
+      {catImages.next && (
+        <Button
+          color="secondary"
+          variant="filled"
+          disabled={Boolean(loading)}
+          onClick={handleClick}
+        >
+          Load more
+        </Button>
+      )}
     </div>
   );
 };

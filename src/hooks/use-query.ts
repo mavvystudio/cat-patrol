@@ -8,6 +8,9 @@ type QueryOptions = {
   callback?: (responseData: any, fromCache: boolean) => void;
 };
 
+/**
+ * Hook that handles fetch requests.
+ */
 export default function useQuery(endpoint: string, options?: QueryOptions) {
   const queryUrl = options?.params ? `${endpoint}?${options.params}` : endpoint;
   const cat = useCat();
@@ -19,6 +22,7 @@ export default function useQuery(endpoint: string, options?: QueryOptions) {
     async (refetchParam?: string) => {
       const fetchUrl = refetchParam ? `${endpoint}?${refetchParam}` : queryUrl;
       const cacheData = cat?.queryCache[fetchUrl];
+
       if (cacheData) {
         setData(cacheData);
         if (options?.callback) {
@@ -26,6 +30,7 @@ export default function useQuery(endpoint: string, options?: QueryOptions) {
         }
         return cacheData;
       }
+
       if (loading) {
         return false;
       }
