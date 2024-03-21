@@ -14,7 +14,11 @@ const Root = () => {
         <TopAppBar className="!h-24 justify-between sticky top-0 z-10">
           <Text variant="headline">Cat Patrol</Text>
           <BreedSelect />
-          <a href="https://github.com/mavvystudio/cat-patrol" target="_blank">
+          <a
+            href="https://github.com/mavvystudio/cat-patrol"
+            target="_blank"
+            rel="noreferrer"
+          >
             <Button icon="code">Github</Button>
           </a>
         </TopAppBar>
