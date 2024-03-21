@@ -12,9 +12,12 @@ const Root = () => {
     <div>
       {!isDetailView && (
         <TopAppBar className="!h-24 justify-between sticky top-0 z-10">
-          <Text variant="headline">Cat Patrol</Text>
+          <Text className="hidden md:block" variant="headline">
+            Cat Patrol
+          </Text>
           <BreedSelect />
           <a
+            className="hidden md:block"
             href="https://github.com/mavvystudio/cat-patrol"
             target="_blank"
             rel="noreferrer"

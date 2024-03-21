@@ -60,7 +60,7 @@ const Search = () => {
           <LinearProgress color="primary" indeterminate />
         </div>
       )}
-      <div className="grid grid-cols-4 container gap-2.5 my-4">
+      <div className="flex flex-col md:grid grid-cols-4 container gap-2.5 my-4 p-4 md:p-0">
         {catImages.images.map((item) => {
           return <CatItem key={item.id} item={item} />;
         })}

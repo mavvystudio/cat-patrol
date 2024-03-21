@@ -29,7 +29,7 @@ const Breed = () => {
   console.log(data);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center p-4 md:p-0">
       <div className="flex flex-col container my-4">
         <Button
           className="self-start"
@@ -39,7 +39,7 @@ const Breed = () => {
         >
           Back
         </Button>
-        <Card className="my-4 grid grid-cols-2 gap-4">
+        <Card className="flex flex-col my-4 md:grid grid-cols-2 gap-4">
           <img className="rounded-2xl" src={data.url} alt={breed.name} />
           <div className="flex flex-col gap-y-4">
             <Text variant="display">{breed.name}</Text>
