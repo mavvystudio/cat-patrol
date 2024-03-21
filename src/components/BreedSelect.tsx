@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Select from '@mavvy/m3-ui/Select';
 import CircularProgress from '@mavvy/m3-ui/CircularProgress';
 
@@ -12,6 +12,10 @@ const BreedSelect = () => {
   const cat = useCat();
   const { data, loading } = useQuery('/breeds');
   const [value, setValue] = useState<string | undefined>(breed);
+
+  useEffect(() => {
+    setValue(breed);
+  }, [breed]);
 
   if (loading) {
     return <CircularProgress color="tertiary" indeterminate />;

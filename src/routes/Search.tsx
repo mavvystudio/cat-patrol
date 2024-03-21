@@ -1,8 +1,9 @@
 import { useCallback, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 
 import Button from '@mavvy/m3-ui/Button';
 import LinearProgress from '@mavvy/m3-ui/LinearProgress';
+import Text from '@mavvy/m3-ui/Text';
 
 import { useCat } from '../components/CatProvider';
 import useQuery from '../hooks/use-query';
@@ -49,8 +50,15 @@ const Search = () => {
   if (!catImages && loading) {
     return <LinearProgress color="primary" indeterminate />;
   }
-  if (!catImages) {
-    return null;
+  if (!catImages?.images.length) {
+    return (
+      <div className="my-8 flex flex-col items-center gap-y-4 justify-center">
+        <Text>No results found.</Text>
+        <Link to="/">
+          <Text color="primary">back to the home page</Text>
+        </Link>
+      </div>
+    );
   }
 
   return (
