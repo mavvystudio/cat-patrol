@@ -2,6 +2,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import Select from '@mavvy/m3-ui/Select';
 import CircularProgress from '@mavvy/m3-ui/CircularProgress';
+import Dialog from '@mavvy/m3-ui/Dialog';
+import Text from '@mavvy/m3-ui/Text';
 
 import useQuery from '../hooks/use-query';
 import { useCat } from '../components/CatProvider';
@@ -18,7 +20,14 @@ const BreedSelect = () => {
   }
 
   if (breed && !(data || []).find((d: any) => d.id === breed)) {
-    return <p>404</p>;
+    return (
+      <Dialog open={true} onClose={() => {}} disableBackdropClose>
+        <div className="flex flex-col p-4 gap-y-2">
+          <Text variant="title">Something went wrong.</Text>
+          <Text>Please try to refresh the page.</Text>
+        </div>
+      </Dialog>
+    );
   }
 
   const options = (data || []).map((item: { name: string; id: string }) => ({
