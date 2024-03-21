@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 
 import Button from '@mavvy/m3-ui/Button';
@@ -21,14 +21,21 @@ const Search = () => {
     paused: true,
     callback: (res, fromCache) => {
       if (!fromCache) {
-        cat?.addImages(breed!, res);
+        cat?.addImages(breed!, res, page);
       }
     },
   });
 
+  const fetchData = useCallback(
+    (page: number, breed?: string) => {
+      refetch(createParams(page, breed));
+    },
+    [refetch],
+  );
+
   useEffect(() => {
-    refetch(createParams(page, breed));
-  }, [page, breed]);
+    fetchData(page, breed);
+  }, [page, breed, fetchData]);
 
   const handleClick = () => {
     setSearchParams({

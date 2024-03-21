@@ -5,9 +5,11 @@ import TopAppBar from '@mavvy/m3-ui/TopAppBar';
 
 import useQuery from '../hooks/use-query';
 import LinearProgress from '@mavvy/m3-ui/LinearProgress';
+import { useCat } from '../components/CatProvider';
 
 const Root = () => {
   const { breed } = useParams();
+  const cat = useCat();
   const { data, loading } = useQuery('/breeds');
   const [value, setValue] = useState<string | undefined>(breed);
   const navigate = useNavigate();
@@ -29,6 +31,12 @@ const Root = () => {
     setValue(id);
     if (!id) {
       return navigate('/');
+    }
+
+    const catImages = cat?.getImages(id);
+    if (catImages) {
+      const page = catImages.page;
+      return navigate(`/search/${id}?page=${page}`);
     }
     return navigate(`/search/${id}?page=1`);
   };

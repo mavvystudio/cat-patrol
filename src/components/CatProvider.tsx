@@ -9,6 +9,12 @@ type CatImage = {
   id: string;
 };
 
+type CatImageCache = {
+  images: Map<string, CatImage>;
+  next: boolean;
+  page: number;
+};
+
 const CatContext = createContext<CatContextType | undefined>(undefined);
 
 export const CatProvider = ({ children }: PropsWithChildren) => {
@@ -24,10 +30,10 @@ export const CatProvider = ({ children }: PropsWithChildren) => {
 function useProvideCat() {
   const [queryCache, setQueryCache] = useState<{ [k: string]: any }>({});
   const [imageCache, setImageCache] = useState<{
-    [k: string]: { images: Map<string, CatImage>; next: boolean };
+    [k: string]: CatImageCache;
   } | null>(null);
 
-  const addImages = (breed: string, dataImages: CatImage[]) => {
+  const addImages = (breed: string, dataImages: CatImage[], page: number) => {
     const target = imageCache ? imageCache[breed] : null;
 
     if (!target) {
@@ -44,6 +50,7 @@ function useProvideCat() {
         [breed]: {
           images,
           next,
+          page,
         },
       }));
 
@@ -60,7 +67,7 @@ function useProvideCat() {
 
     setImageCache((value) => ({
       ...value,
-      [breed]: { images: target.images, next },
+      [breed]: { images: target.images, next, page },
     }));
   };
 
@@ -80,6 +87,7 @@ function useProvideCat() {
     return {
       next: data.next,
       images: items,
+      page: data.page,
     };
   };
 
