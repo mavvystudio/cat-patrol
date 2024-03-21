@@ -1,21 +1,16 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useCat } from '../components/CatProvider';
-
-const baseUrl = 'https://api.thecatapi.com/v1';
+import { createFetch } from '../utils';
 
 export default function useQuery(endpoint: string, params?: string) {
-  const queryUrl = createQueryUrl(endpoint, params);
+  const queryUrl = params ? `${endpoint}?${params}` : endpoint;
   const cat = useCat();
   const [loading, setLoading] = useState<boolean | null>(null);
 
   const query = useCallback(async () => {
-    const cacheData = cat?.data[queryUrl];
+    const cacheData = cat?.queryCache[queryUrl];
 
-    if (cacheData) {
-      return null;
-    }
-
-    if (loading) {
+    if (cacheData || loading) {
       return null;
     }
 
@@ -25,7 +20,7 @@ export default function useQuery(endpoint: string, params?: string) {
 
     setLoading(false);
 
-    cat?.setData((value: any) => ({
+    cat?.setQueryCache((value: any) => ({
       ...value,
       [queryUrl]: res,
     }));
@@ -37,27 +32,6 @@ export default function useQuery(endpoint: string, params?: string) {
 
   return {
     loading,
-    data: cat?.data[queryUrl],
+    data: cat?.queryCache[queryUrl],
   };
-}
-
-function createQueryUrl(endpoint: string, params?: string) {
-  if (params) {
-    return `${endpoint}?${params}`;
-  }
-
-  return endpoint;
-}
-
-async function createFetch(requestUrl: string) {
-  console.log('fetching');
-  const res = await fetch(`${baseUrl}${requestUrl}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  const json = await res.json();
-
-  return json;
 }
