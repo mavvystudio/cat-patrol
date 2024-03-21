@@ -1,13 +1,13 @@
 import { useCallback, useEffect } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import Button from '@mavvy/m3-ui/Button';
 import LinearProgress from '@mavvy/m3-ui/LinearProgress';
-import Text from '@mavvy/m3-ui/Text';
 
 import { useCat } from '../components/CatProvider';
 import useQuery from '../hooks/use-query';
 import CatItem from 'components/CatItem';
+import EmptyResult from 'components/EmptyResult';
 
 const endpoint = '/images/search';
 const createParams = (page: number, breed?: string) =>
@@ -51,14 +51,7 @@ const Search = () => {
     return <LinearProgress color="primary" indeterminate />;
   }
   if (!catImages?.images.length) {
-    return (
-      <div className="my-8 flex flex-col items-center gap-y-4 justify-center">
-        <Text>No results found.</Text>
-        <Link to="/">
-          <Text color="primary">back to the home page</Text>
-        </Link>
-      </div>
-    );
+    return <EmptyResult />;
   }
 
   return (

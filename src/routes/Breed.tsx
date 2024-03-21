@@ -5,6 +5,8 @@ import Button from '@mavvy/m3-ui/Button';
 import LinearProgress from '@mavvy/m3-ui/LinearProgress';
 import Text from '@mavvy/m3-ui/Text';
 import Temperament from 'components/Temperament';
+import EmptyResult from 'components/EmptyResult';
+import { useEffect } from 'react';
 
 const Breed = () => {
   const params = useParams();
@@ -12,16 +14,33 @@ const Breed = () => {
     data,
     loading,
     error,
-  }: { data: any; loading: boolean | null; error: null | string } = useQuery(
-    `/images/${params.id}`,
-  );
+    refetch,
+  }: {
+    refetch: () => any;
+    data: any;
+    loading: boolean | null;
+    error: null | string;
+  } = useQuery(`/images/${params.id}`, {
+    paused: true,
+  });
   const navigate = useNavigate();
 
+  useEffect(() => {
+    refetch();
+  }, []);
+
   if (loading) {
-    return <LinearProgress color="primary" indeterminate />;
+    return (
+      <div className="flex flex-col w-full gap-y-4 items-center">
+        <LinearProgress color="primary" indeterminate />
+        <div className="container">
+          <Card className="h-[300px]" />
+        </div>
+      </div>
+    );
   }
   if (!data || error) {
-    return <p>404</p>;
+    return <EmptyResult />;
   }
 
   const breed = data.breeds[0];
