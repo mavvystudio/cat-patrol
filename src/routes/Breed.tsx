@@ -8,7 +8,11 @@ import Temperament from 'components/Temperament';
 
 const Breed = () => {
   const params = useParams();
-  const { data, loading }: { data: any; loading: boolean | null } = useQuery(
+  const {
+    data,
+    loading,
+    error,
+  }: { data: any; loading: boolean | null; error: null | string } = useQuery(
     `/images/${params.id}`,
   );
   const navigate = useNavigate();
@@ -16,7 +20,7 @@ const Breed = () => {
   if (loading) {
     return <LinearProgress color="primary" indeterminate />;
   }
-  if (!data) {
+  if (!data || error) {
     return <p>404</p>;
   }
 
