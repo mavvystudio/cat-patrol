@@ -5,7 +5,7 @@ import { createFetch } from '../utils';
 type QueryOptions = {
   params?: string;
   paused?: boolean;
-  callback?: (responseData: any) => void;
+  callback?: (responseData: any, fromCache: boolean) => void;
 };
 
 export default function useQuery(endpoint: string, options?: QueryOptions) {
@@ -22,7 +22,7 @@ export default function useQuery(endpoint: string, options?: QueryOptions) {
       if (cacheData) {
         setData(cacheData);
         if (options?.callback) {
-          options.callback(cacheData);
+          options.callback(cacheData, true);
         }
         return cacheData;
       }
@@ -41,7 +41,7 @@ export default function useQuery(endpoint: string, options?: QueryOptions) {
       }));
 
       if (options?.callback) {
-        options.callback(res);
+        options.callback(res, false);
       }
 
       return res;

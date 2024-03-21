@@ -1,9 +1,11 @@
-import useQuery from '../hooks/use-query';
-import { useParams, useSearchParams } from 'react-router-dom';
-import Button from '@mavvy/m3-ui/Button';
-import { useCat } from '../components/CatProvider';
-import LinearProgress from '@mavvy/m3-ui/LinearProgress';
 import { useEffect } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+
+import Button from '@mavvy/m3-ui/Button';
+import LinearProgress from '@mavvy/m3-ui/LinearProgress';
+
+import { useCat } from '../components/CatProvider';
+import useQuery from '../hooks/use-query';
 
 const endpoint = '/images/search';
 const createParams = (page: number, breed?: string) =>
@@ -17,8 +19,10 @@ const Search = () => {
   const { loading, refetch } = useQuery(endpoint, {
     params: createParams(1, breed),
     paused: true,
-    callback: (res) => {
-      cat?.addImages(breed!, res);
+    callback: (res, fromCache) => {
+      if (!fromCache) {
+        cat?.addImages(breed!, res);
+      }
     },
   });
 
@@ -26,27 +30,28 @@ const Search = () => {
     refetch(createParams(page, breed));
   }, [page, breed]);
 
-  if (loading || loading === null) {
-    return <LinearProgress color="primary" indeterminate />;
-  }
-  const images = cat?.getImages(breed!);
-
   const handleClick = () => {
     setSearchParams({
       page: String(page + 1),
     });
   };
 
-  if (!images) {
+  const catImages = cat?.getImages(breed!);
+
+  if (!catImages && loading) {
+    return <LinearProgress color="primary" indeterminate />;
+  }
+  if (!catImages) {
     return null;
   }
 
   return (
     <div>
-      {images.images.map((item) => {
+      {loading && <LinearProgress color="primary" indeterminate />}
+      {catImages.images.map((item) => {
         return <p key={item.id}>{item.id}</p>;
       })}
-      {images.next && <Button onClick={handleClick}>Load more</Button>}
+      {catImages.next && <Button onClick={handleClick}>Load more</Button>}
     </div>
   );
 };

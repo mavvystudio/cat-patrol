@@ -13,9 +13,14 @@ const CatContext = createContext<CatContextType | undefined>(undefined);
 
 export const CatProvider = ({ children }: PropsWithChildren) => {
   const value = useProvideCat();
+
   return <CatContext.Provider value={value}>{children}</CatContext.Provider>;
 };
 
+/**
+ * This hook handles in memory caching of data from
+ * the api requests.
+ */
 function useProvideCat() {
   const [queryCache, setQueryCache] = useState<{ [k: string]: any }>({});
   const [imageCache, setImageCache] = useState<{
@@ -24,6 +29,7 @@ function useProvideCat() {
 
   const addImages = (breed: string, dataImages: CatImage[]) => {
     const target = imageCache ? imageCache[breed] : null;
+
     if (!target) {
       const images = new Map<string, CatImage>();
 
@@ -59,16 +65,20 @@ function useProvideCat() {
   };
 
   const getImages = (breed: string) => {
-    const images = imageCache ? imageCache[breed] : null;
-    if (!images) {
+    const data = imageCache ? imageCache[breed] : null;
+
+    if (!data) {
       return null;
     }
+
     const items: CatImage[] = [];
-    images.images.forEach((item) => {
+
+    data.images.forEach((item) => {
       items.push(item);
     });
+
     return {
-      next: images.next,
+      next: data.next,
       images: items,
     };
   };
