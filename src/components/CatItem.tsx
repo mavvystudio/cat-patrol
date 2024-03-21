@@ -14,7 +14,7 @@ const CatItem = (props: CatItemProps) => {
       <img
         src={props.item.url}
         alt="a cat"
-        className="h-[280px] object-cover h-full w-full"
+        className="h-[280px] object-cover w-full"
       />
       <Link to={`/breed/${props.item.id}`}>
         <Button
