@@ -13,7 +13,7 @@ const BreedSelect = () => {
   const { data, loading } = useQuery('/breeds');
   const [value, setValue] = useState<string | undefined>(breed);
 
-  if (loading || loading === null) {
+  if (loading) {
     return <CircularProgress color="tertiary" indeterminate />;
   }
 
