@@ -1,7 +1,10 @@
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import useQuery from '../hooks/use-query';
-import Select from '@mavvy/m3-ui/Select';
 import { useState } from 'react';
+import Select from '@mavvy/m3-ui/Select';
+import TopAppBar from '@mavvy/m3-ui/TopAppBar';
+
+import useQuery from '../hooks/use-query';
+import LinearProgress from '@mavvy/m3-ui/LinearProgress';
 
 const Root = () => {
   const { breed } = useParams();
@@ -10,32 +13,38 @@ const Root = () => {
   const navigate = useNavigate();
 
   if (loading || loading === null) {
-    return null;
+    return <LinearProgress color="primary" indeterminate />;
   }
+
   if (breed && !data.find((d: any) => d.id === breed)) {
     return <p>404</p>;
   }
 
-  console.log(data, loading, breed);
   const options = data.map((item: { name: string; id: string }) => ({
     text: item.name,
     value: item.id,
   }));
 
   const handleChange = (id: string) => {
-    console.log(id);
     setValue(id);
-    navigate(`/search/${id}`);
+    if (!id) {
+      return navigate('/');
+    }
+    return navigate(`/search/${id}`);
   };
 
   return (
-    <div className="p-4">
-      <Select
-        label="Select Breed"
-        value={value}
-        options={options}
-        onChange={handleChange}
-      />
+    <div>
+      <TopAppBar className="h-24 justify-center sticky top-0">
+        <Select
+          className="w-[400px]"
+          variant="filled"
+          label="Select Breed"
+          value={value}
+          options={options}
+          onChange={handleChange}
+        />
+      </TopAppBar>
       <Outlet />
     </div>
   );
