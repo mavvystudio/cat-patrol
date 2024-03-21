@@ -1,58 +1,18 @@
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
-import Select from '@mavvy/m3-ui/Select';
+import { Outlet, useLocation } from 'react-router-dom';
 import TopAppBar from '@mavvy/m3-ui/TopAppBar';
 
-import useQuery from '../hooks/use-query';
-import LinearProgress from '@mavvy/m3-ui/LinearProgress';
-import { useCat } from '../components/CatProvider';
+import BreedSelect from '../components/BreedSelect';
 
 const Root = () => {
-  const { breed } = useParams();
-  const cat = useCat();
-  const { data, loading } = useQuery('/breeds');
-  const [value, setValue] = useState<string | undefined>(breed);
-  const navigate = useNavigate();
-
-  if (loading || loading === null) {
-    return <LinearProgress color="primary" indeterminate />;
-  }
-
-  if (breed && !(data || []).find((d: any) => d.id === breed)) {
-    return <p>404</p>;
-  }
-
-  const options = (data || []).map((item: { name: string; id: string }) => ({
-    text: item.name,
-    value: item.id,
-  }));
-
-  const handleChange = (id: string) => {
-    setValue(id);
-    if (!id) {
-      return navigate('/');
-    }
-
-    const catImages = cat?.getImages(id);
-    if (catImages) {
-      const page = catImages.page;
-      return navigate(`/search/${id}?page=${page}`);
-    }
-    return navigate(`/search/${id}?page=1`);
-  };
-
+  const location = useLocation();
+  const isDetailView = location.pathname.indexOf('/breed') === 0;
   return (
     <div>
-      <TopAppBar className="!h-24 justify-center sticky top-0">
-        <Select
-          className="!w-[400px]"
-          variant="filled"
-          label="Select Breed"
-          value={value}
-          options={options}
-          onChange={handleChange}
-        />
-      </TopAppBar>
+      {!isDetailView && (
+        <TopAppBar className="!h-24 justify-center sticky top-0">
+          <BreedSelect />
+        </TopAppBar>
+      )}
       <Outlet />
     </div>
   );

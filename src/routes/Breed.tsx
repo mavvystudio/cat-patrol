@@ -1,8 +1,8 @@
-import { LoaderFunctionArgs } from 'react-router-dom';
-
-export async function loader({ params }: LoaderFunctionArgs) {}
+import { useParams } from 'react-router-dom';
 
 const Breed = () => {
+  const params = useParams();
+  console.log(params);
   return <p>Breed</p>;
 };
 
