@@ -1,5 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import Button from '@mavvy/m3-ui/Button';
 import TopAppBar from '@mavvy/m3-ui/TopAppBar';
+import Text from '@mavvy/m3-ui/Text';
 
 import BreedSelect from '../components/BreedSelect';
 
@@ -9,8 +11,12 @@ const Root = () => {
   return (
     <div>
       {!isDetailView && (
-        <TopAppBar className="!h-24 justify-center sticky top-0">
+        <TopAppBar className="!h-24 justify-between sticky top-0 z-10">
+          <Text variant="headline">Cat Patrol</Text>
           <BreedSelect />
+          <a href="https://github.com/mavvystudio/cat-patrol" target="_blank">
+            <Button icon="code">Github</Button>
+          </a>
         </TopAppBar>
       )}
       <Outlet />
