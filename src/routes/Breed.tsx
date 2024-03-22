@@ -62,7 +62,7 @@ const Breed = () => {
         >
           Back
         </Button>
-        <Card className="flex flex-col my-4 md:grid grid-cols-2 gap-4">
+        <Card className="animate-fade-in-top flex flex-col my-4 md:grid grid-cols-2 gap-4">
           <img className="rounded-2xl" src={data.url} alt={breed.name} />
           <div className="flex flex-col gap-y-4">
             <Text variant="display">{breed.name}</Text>
