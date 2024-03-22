@@ -49,8 +49,6 @@ const Breed = () => {
     navigate(`/search/${breed.id}?page=1&limit=10`);
   };
 
-  console.log(data);
-
   return (
     <div className="flex justify-center p-4 md:p-0">
       <div className="flex flex-col container my-4">
